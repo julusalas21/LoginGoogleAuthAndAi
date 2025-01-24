@@ -19,5 +19,6 @@ model User {
   email String @unique
   movie String? @default("Shawshank Redmeption")
   profileIMG String?
+  LoggedIn Boolean @default(true)
 }
 //google auth will provide a url to the profile image
