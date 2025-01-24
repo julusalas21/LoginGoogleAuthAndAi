@@ -8,10 +8,10 @@ export default async function UserHome({params}:any){
             id: Number(await params.id),
         }
     });
-    if(user==null || await params.id==-1){
+    if(user==null || await params.id==-1 || user.LoggedIn==false){
         return(
             <main className="flex flex-col items-center gapy-y-5 pt-18 text-center">
-                <h1 className="large-text">No account Found</h1>
+                <h1 className="large-text">No account Found, Need to Log In</h1>
                 <Link href="/" className="underline">Back to Home</Link>
         </main>
         )
@@ -60,7 +60,16 @@ export default async function UserHome({params}:any){
                 height={50}
             ></Image>
             <div>Your favorite movie is {user?.movie}</div>
-            <Link href="/" className="underline">Click to Logout and Go Home</Link>
+            <Link href="/" onClick={async ()=>{
+                "use server";
+                await prisma.user.update({
+                    where:{
+                        email: user.email
+                    },
+                    data: {
+                        LoggedIn: false
+                    }});
+            }} className="underline">Click to Logout and Go Home</Link>
         </main>
     )}
     

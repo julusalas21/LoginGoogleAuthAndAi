@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { error } from "console";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { redirect } from "next/navigation";
-import {signIn, auth} from "@/lib/auth";
+import {signIn} from "@/lib/auth";
 
 export async function makeUser() {
     await signIn('google')
@@ -18,7 +18,14 @@ export async function checkUser(formData: FormData){
         })
         if(user!==null){
             console.log(user.name);
-            console.log(user.id)
+            console.log(user.id);
+            await prisma.user.update({
+                where:{
+                    email: user.email
+                },
+                data: {
+                    LoggedIn: true
+                }});
             redirect(`/login/${user.id}`);
         }
         else{
