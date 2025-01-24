@@ -1,10 +1,7 @@
-import { checkUser } from "@/actions/actions";
 import {prisma} from "@/lib/db";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-
+import Image from 'next/image';
 export default async function UserHome({params}:any){
     const user=await prisma.user.findUnique({
         where: {
@@ -56,6 +53,12 @@ export default async function UserHome({params}:any){
         return (
         <main className="flex flex-col items-center gapy-y-5 pt-18 text-center">
             <h1>Hello, {user?.name}</h1>
+            <Image
+                src= {String(user.profileIMG)}
+                alt="profilepic"
+                width={50}
+                height={50}
+            ></Image>
             <div>Your favorite movie is {user?.movie}</div>
             <Link href="/" className="underline">Click to Logout and Go Home</Link>
         </main>
