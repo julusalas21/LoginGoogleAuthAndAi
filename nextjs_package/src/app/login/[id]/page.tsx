@@ -2,6 +2,7 @@ import {prisma} from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from 'next/image';
+import getMovieFact, { setMovie } from "@/actions/chat";
 export default async function UserHome({params}:any){
     const user=await prisma.user.findUnique({
         where: {
@@ -50,6 +51,8 @@ export default async function UserHome({params}:any){
         );
     }
     else{
+        setMovie(user.movie);
+        const fact=await getMovieFact();
         return (
         <main className="flex flex-col items-center gapy-y-5 pt-18 text-center">
             <h1>Hello, {user?.name}</h1>
@@ -59,7 +62,7 @@ export default async function UserHome({params}:any){
                 width={50}
                 height={50}
             ></Image>
-            <div>Your favorite movie is {user?.movie}</div>
+            <div>{fact}</div>
             <Link href="/" onClick={async ()=>{
                 "use server";
                 await prisma.user.update({
